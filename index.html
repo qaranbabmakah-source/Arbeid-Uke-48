@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FjordTek - Kunder</title>
+</head>
+<body>
+    <h1>FjordTek - Kundeliste</h1>
+    <button id="hentKunder">Hent kunder</button>
+    <ul id="kundeliste"></ul>
+
+
+<script>
+document.getElementById("hentKunder").addEventListener("click", async () => {
+    const liste = document.getElementById("kundeliste");
+    liste.textContent = "Henter kunder...";
+
+    try {
+        const svar = await fetch("http://127.0.0.1:3000/api/kunder");
+        if (!svar.ok) throw new Error("Kunne ikke hente kunder");
+
+        const kunder = await svar.json();
+        liste.replaceChildren();
+
+        kunder.forEach(kunde => {
+            const li = document.createElement("li");
+            li.textContent = `${kunde.NAVN} – ${kunde.EPOST}`;
+            liste.appendChild(li);
+        });
+    } catch (feil) {
+        liste.textContent = "Feil: Kunne ikke hente kunder.";
+    }
+});
+</script>
+</body>
+</html>
